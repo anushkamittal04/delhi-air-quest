@@ -1,7 +1,8 @@
-import { NavLink as RouterNavLink, useLocation } from "react-router-dom";
+import { NavLink as RouterNavLink } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { LayoutDashboard, Navigation, Leaf, Trophy, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
+import breathwiseLogo from "@/assets/breathwise-logo.png";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -12,7 +13,6 @@ const navItems = [
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { user, logout } = useAuth();
-  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -20,10 +20,8 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 bg-sidebar border-r border-sidebar-border p-4 sticky top-0 h-screen">
         <div className="flex items-center gap-3 px-3 mb-8">
-          <div className="w-9 h-9 rounded-lg gradient-hero flex items-center justify-center">
-            <Leaf className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <span className="font-display font-bold text-sidebar-foreground text-lg">CleanAir</span>
+          <img src={breathwiseLogo} alt="BreathWise" className="w-9 h-9 rounded-lg object-cover" />
+          <span className="font-display font-bold text-sidebar-foreground text-lg">BreathWise</span>
         </div>
 
         <nav className="flex-1 space-y-1">
@@ -65,10 +63,8 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Mobile header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-card border-b border-border px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center">
-            <Leaf className="w-4 h-4 text-primary-foreground" />
-          </div>
-          <span className="font-display font-bold text-foreground">CleanAir</span>
+          <img src={breathwiseLogo} alt="BreathWise" className="w-8 h-8 rounded-lg object-cover" />
+          <span className="font-display font-bold text-foreground">BreathWise</span>
         </div>
         <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-foreground">
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

@@ -1,8 +1,10 @@
+import { useRef, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { ECO_QUESTS, getRewardTier } from "@/data/mockData";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Leaf, Trophy, Target } from "lucide-react";
+import { Leaf, Trophy, Target, Upload, CheckCircle2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 const EcoQuest = () => {
   const { user, toggleQuest } = useAuth();
@@ -10,14 +12,26 @@ const EcoQuest = () => {
   const points = user?.points ?? 0;
   const tier = getRewardTier(points);
 
+  // Track uploaded proof per quest id
+  const [proofUploaded, setProofUploaded] = useState<Record<string, string>>({});
+  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+
   const weekly = ECO_QUESTS.filter((q) => q.type === "weekly");
   const monthly = ECO_QUESTS.filter((q) => q.type === "monthly");
 
-  const QuestList = ({ quests, label }: { quests: typeof ECO_QUESTS; label: string }) => (
+  const handleFileChange = (questId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setProofUploaded((prev) => ({ ...prev, [questId]: url }));
+    }
+  };
+
+  const WeeklyQuestList = ({ quests }: { quests: typeof ECO_QUESTS }) => (
     <div>
       <h2 className="text-lg font-display font-semibold text-foreground mb-3 flex items-center gap-2">
         <Target className="w-5 h-5 text-primary" />
-        {label}
+        Weekly Challenges
       </h2>
       <div className="space-y-3">
         {quests.map((q) => {
@@ -44,6 +58,91 @@ const EcoQuest = () => {
                 +{q.points} pts
               </span>
             </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const MonthlyQuestList = ({ quests }: { quests: typeof ECO_QUESTS }) => (
+    <div>
+      <h2 className="text-lg font-display font-semibold text-foreground mb-3 flex items-center gap-2">
+        <Leaf className="w-5 h-5 text-primary" />
+        Monthly Challenges
+      </h2>
+      <div className="space-y-4">
+        {quests.map((q) => {
+          const done = completed.includes(q.id);
+          const hasProof = !!proofUploaded[q.id];
+          return (
+            <div
+              key={q.id}
+              className={`bg-card rounded-xl border p-5 shadow-card transition-all ${
+                done ? "border-primary/40 bg-primary/5" : "border-border"
+              }`}
+            >
+              <div className="flex items-start gap-4">
+                <div className="mt-0.5">
+                  {done ? (
+                    <CheckCircle2 className="w-5 h-5 text-primary" />
+                  ) : (
+                    <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/40" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`font-medium text-card-foreground ${done ? "line-through opacity-60" : ""}`}>
+                    {q.title}
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{q.desc}</p>
+
+                  {/* Proof upload section */}
+                  {!done && (
+                    <div className="mt-3">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        ref={(el) => { fileInputRefs.current[q.id] = el; }}
+                        onChange={(e) => handleFileChange(q.id, e)}
+                      />
+                      {hasProof ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                            <CheckCircle2 className="w-4 h-4" />
+                            Proof uploaded!
+                          </div>
+                          <img
+                            src={proofUploaded[q.id]}
+                            alt="proof"
+                            className="w-24 h-16 object-cover rounded-lg border border-border"
+                          />
+                          <Button
+                            size="sm"
+                            onClick={() => toggleQuest(q.id)}
+                            className="gradient-hero border-0 text-primary-foreground text-xs"
+                          >
+                            Claim {q.points} Points
+                          </Button>
+                        </div>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1.5 text-xs border-dashed"
+                          onClick={() => fileInputRefs.current[q.id]?.click()}
+                        >
+                          <Upload className="w-3.5 h-3.5" />
+                          Upload Proof to Claim Points
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <span className="shrink-0 text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
+                  +{q.points} pts
+                </span>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -85,8 +184,8 @@ const EcoQuest = () => {
         )}
       </div>
 
-      <QuestList quests={weekly} label="Weekly Challenges" />
-      <QuestList quests={monthly} label="Half-Monthly Challenges" />
+      <WeeklyQuestList quests={weekly} />
+      <MonthlyQuestList quests={monthly} />
     </div>
   );
 };
