@@ -43,11 +43,11 @@ export const ECO_QUESTS = [
   { id: "q1", title: "Use public transport", desc: "Take the metro or bus instead of driving", points: 10, type: "weekly" as const },
   { id: "q2", title: "Carpool to work", desc: "Share a ride with a colleague", points: 10, type: "weekly" as const },
   { id: "q3", title: "Cycle instead of car", desc: "Use a bicycle for short distances", points: 10, type: "weekly" as const },
-  { id: "q4", title: "Plant a tree", desc: "Contribute to Delhi's green cover", points: 10, type: "monthly" as const },
-  { id: "q5", title: "Join a clean-up drive", desc: "Participate in a neighborhood clean-up", points: 10, type: "monthly" as const },
   { id: "q6", title: "Reduce single-use plastic", desc: "Carry reusable bags and bottles", points: 10, type: "weekly" as const },
-  { id: "q7", title: "Compost kitchen waste", desc: "Start composting at home", points: 10, type: "monthly" as const },
   { id: "q8", title: "Walk for errands", desc: "Walk for trips under 1 km", points: 10, type: "weekly" as const },
+  { id: "q4", title: "Plant a tree", desc: "Contribute to Delhi's green cover — upload a photo as proof", points: 100, type: "monthly" as const },
+  { id: "q5", title: "Join a clean-up drive", desc: "Participate in a neighborhood clean-up — upload a photo as proof", points: 100, type: "monthly" as const },
+  { id: "q7", title: "Compost kitchen waste", desc: "Start composting at home — upload a photo as proof", points: 100, type: "monthly" as const },
 ];
 
 export const LEADERBOARD = [
