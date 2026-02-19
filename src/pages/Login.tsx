@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Leaf, Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
+import breathwiseLogo from "@/assets/breathwise-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -28,10 +29,8 @@ const Login = () => {
       <div className="w-full max-w-md animate-fade-in">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-hero mb-4">
-            <Leaf className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-3xl font-display font-bold text-foreground">CleanAir Delhi</h1>
+          <img src={breathwiseLogo} alt="BreathWise" className="w-16 h-16 rounded-2xl object-cover mx-auto mb-4" />
+          <h1 className="text-3xl font-display font-bold text-foreground">BreathWise</h1>
           <p className="text-muted-foreground mt-2">Breathe better. Live greener.</p>
         </div>
 
