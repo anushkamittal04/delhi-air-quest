@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DELHI_LOCATIONS, AQI_INFO, getAqiCategory } from "@/data/mockData";
-import { Navigation, AlertTriangle, Shield, CalendarIcon } from "lucide-react";
+import { DELHI_LOCATIONS } from "@/data/mockData";
+import { Navigation, AlertTriangle, Shield, CalendarIcon, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,46 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+
+interface AqiResult {
+  predicted_pm25: number;
+  aqi_category: string;
+  travel_advice: string;
+}
 
 const TravelAlert = () => {
   const [destination, setDestination] = useState("");
   const [time, setTime] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [result, setResult] = useState<null | { aqi: number; cat: string }>(null);
+  const [result, setResult] = useState<AqiResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleCheck = (e: React.FormEvent) => {
+  const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
-    const predicted = 180 + Math.floor(Math.random() * 120);
-    setResult({ aqi: predicted, cat: getAqiCategory(predicted) });
+    if (!date || !time || !destination) return;
+
+    const dateTimeStr = `${format(date, "yyyy-MM-dd")} ${time}`;
+    const params = new URLSearchParams({ destination, time: dateTimeStr });
+    const url = `https://biased-darien-interfemoral.ngrok-free.dev/predict_aqi?${params.toString()}`;
+
+    setLoading(true);
+    setResult(null);
+    try {
+      const res = await fetch(url, { headers: { "ngrok-skip-browser-warning": "true" } });
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+      const data = await res.json();
+      setResult({
+        predicted_pm25: data.predicted_pm25,
+        aqi_category: data.aqi_category,
+        travel_advice: data.travel_advice,
+      });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to fetch AQI prediction", variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,10 +118,10 @@ const TravelAlert = () => {
           <Button
             type="submit"
             className="gradient-hero border-0 text-primary-foreground font-semibold"
-            disabled={!destination || !date}
+            disabled={!destination || !date || loading}
           >
-            <Navigation className="w-4 h-4 mr-2" />
-            Check Air Quality
+            {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Navigation className="w-4 h-4 mr-2" />}
+            {loading ? "Checking..." : "Check Air Quality"}
           </Button>
         </form>
       </div>
@@ -100,42 +129,25 @@ const TravelAlert = () => {
       {/* Result */}
       {result && (
         <div className="animate-scale-in space-y-4">
-          <div className={`${AQI_INFO[result.cat].color} rounded-2xl p-6 shadow-elevated`}>
+          <div className="bg-card rounded-2xl border border-border p-6 shadow-elevated">
             <div className="flex items-center gap-3 mb-4">
-              <AlertTriangle className="w-6 h-6" />
-              <h2 className="text-xl font-display font-bold">Travel Advisory</h2>
+              <AlertTriangle className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-display font-bold text-card-foreground">Travel Advisory</h2>
             </div>
-            <p className="text-4xl font-display font-extrabold mb-1">AQI {result.aqi}</p>
-            <p className="text-sm opacity-90 font-medium">
-              {AQI_INFO[result.cat].label} air quality predicted on {date ? format(date, "dd/MM/yyyy") : ""}
-              {time ? ` at ${time}` : ""}
+            <p className="text-4xl font-display font-extrabold mb-1 text-foreground">
+              PM2.5: {result.predicted_pm25}
+            </p>
+            <p className="text-sm text-muted-foreground font-medium">
+              Category: <span className="font-bold text-foreground">{result.aqi_category}</span>
             </p>
           </div>
 
           <div className="bg-card rounded-xl border border-border p-5 shadow-card">
             <h3 className="font-display font-semibold text-card-foreground mb-3 flex items-center gap-2">
               <Shield className="w-5 h-5 text-primary" />
-              Recommendations
+              Travel Advice
             </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              {result.aqi > 200 && (
-                <>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-severe" /> Consider traveling earlier when AQI tends to be lower</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-severe" /> Wear an N95 mask during your commute</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-severe" /> Use an AC vehicle with recirculated air</li>
-                </>
-              )}
-              {result.aqi > 100 && result.aqi <= 200 && (
-                <>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-poor" /> Carry a mask as a precaution</li>
-                  <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-poor" /> Avoid prolonged outdoor exposure</li>
-                </>
-              )}
-              {result.aqi <= 100 && (
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-aqi-good" /> Air quality is acceptable. Have a safe trip!</li>
-              )}
-              <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-primary" /> Consider public transport to reduce emissions</li>
-            </ul>
+            <p className="text-sm text-muted-foreground">{result.travel_advice}</p>
           </div>
         </div>
       )}
