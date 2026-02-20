@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
+
 interface AqiResult {
   predicted_pm25: number;
   aqi_category: string;
@@ -29,19 +30,21 @@ const TravelAlert = () => {
     if (!date || !time || !destination) return;
 
     const dateTimeStr = `${format(date, "yyyy-MM-dd")} ${time}`;
-    const params = new URLSearchParams({ destination, time: dateTimeStr });
-    const url = `https://biased-darien-interfemoral.ngrok-free.dev/predict_aqi?${params.toString()}`;
 
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch(url, { headers: { "ngrok-skip-browser-warning": "true" } });
+      const params = new URLSearchParams({ destination, time: dateTimeStr });
+      const res = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/predict-aqi?${params.toString()}`,
+        { headers: { "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+      );
       if (!res.ok) throw new Error(`API error: ${res.status}`);
-      const data = await res.json();
+      const json = await res.json();
       setResult({
-        predicted_pm25: data.predicted_pm25,
-        aqi_category: data.aqi_category,
-        travel_advice: data.travel_advice,
+        predicted_pm25: json.predicted_pm25,
+        aqi_category: json.aqi_category,
+        travel_advice: json.travel_advice,
       });
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to fetch AQI prediction", variant: "destructive" });
