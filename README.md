@@ -112,6 +112,15 @@ FUTURE IMPROVEMENTS->
 - Add authentication
 
 AUTHOR->
-Full-stack + ML project for learning and hackathon demonstration.
-Frontend generated using Lovable and integrated with backend.
+About
+
+This project was originally created for a hackathon. It is now being maintained and shared here as part of my portfolio. I served as the primary developer throughout the project.
+
+Team Members
+
+- Anushka Mittal
+- Yashree Srivastava
+- Somya Mishra
+- Avlika Rawat
+
 
