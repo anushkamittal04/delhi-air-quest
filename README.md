@@ -1,73 +1,117 @@
-# Welcome to your Lovable project
+--Delhi Air Quest--
 
-## Project info
+A full-stack Air Quality Monitoring and Prediction web application that predicts AQI (Air Quality Index) using a machine learning model and displays results through a modern interactive dashboard.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+PROJECT OVERVIEW->
+Delhi Air Quest:
+- Predicts Air Quality Index (AQI) using ML model
+- FastAPI backend for predictions
+- Responsive frontend dashboard
+- Runs locally and can be exposed using ngrok
 
-## How can I edit this code?
+Frontend UI was generated using Lovable and then customized and integrated with backend.
 
-There are several ways of editing your application.
+TECH STACK->
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
+Frontend:
+- React (Vite)
 - TypeScript
-- React
-- shadcn-ui
 - Tailwind CSS
+- Lovable-generated UI
+- Supabase (optional)
 
-## How can I deploy this project?
+Backend:
+- FastAPI
+- Python
+- Scikit-learn
+- Pandas, NumPy
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+Tools:
+- Git & GitHub
+- ngrok
 
-## Can I connect a custom domain to my Lovable project?
+PROJECT STRUCTURE->
 
-Yes, you can!
+delhi-air-quest/
+├── backend/
+│   ├── app.py
+│   ├── requirements.txt
+│   ├── model/
+│   │   └── aqi_model.pkl
+│   ├── data/
+│   ├── test.ipynb
+│   └── delhi_pm25_aqi (1).csv
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   ├── supabase/
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── bun.lockb
+│   ├── components.json
+│   ├── eslint.config.js
+│   ├── postcss.config.js
+│   ├── tailwind.config.ts
+│   ├── tsconfig.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts
+│   └── vitest.config.ts
+│
+├── .gitignore
+└── README.md
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+HOW TO RUN LOCALLY->
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Backend:
+cd backend
+pip install -r requirements.txt
+uvicorn app:app --reload
+
+Backend runs at:
+http://127.0.0.1:8000
+
+Frontend:
+cd frontend
+npm install
+npm run dev
+
+Frontend runs at:
+http://localhost:5173
+
+NGROK USAGE->
+
+Install:
+npm install -g ngrok
+
+Backend tunnel:
+ngrok http 8000
+
+Frontend tunnel:
+ngrok http 5173
+
+FEATURES->
+- AQI prediction
+- ML-based forecasting
+- Clean dashboard UI
+- FastAPI backend
+- ngrok public access
+
+LIMITATIONS->
+- Runs locally
+- ngrok link changes every session
+- Not deployed permanently
+
+FUTURE IMPROVEMENTS->
+- Deploy backend (Render/Railway)
+- Deploy frontend (Vercel/Netlify)
+- Improve ML accuracy
+- Add live pollution APIs
+- Add authentication
+
+AUTHOR->
+Full-stack + ML project for learning and hackathon demonstration.
+Frontend generated using Lovable and integrated with backend.
+
