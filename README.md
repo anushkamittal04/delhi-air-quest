@@ -3,7 +3,9 @@
 A full-stack Air Quality Monitoring and Prediction web application that predicts AQI (Air Quality Index) using a machine learning model and displays results through a modern interactive dashboard.
 
 PROJECT OVERVIEW->
+
 Delhi Air Quest:
+
 - Predicts Air Quality Index (AQI) using ML model
 - FastAPI backend for predictions
 - Responsive frontend dashboard
@@ -18,29 +20,28 @@ Frontend:
 - TypeScript
 - Tailwind CSS
 - Lovable-generated UI
-- Supabase (optional)
 
 Backend:
 - FastAPI
 - Python
 - Scikit-learn
 - Pandas, NumPy
+- Joblib
 
 Tools:
 - Git & GitHub
-- ngrok
 
 PROJECT STRUCTURE->
 
 delhi-air-quest/
+│
 ├── backend/
-│   ├── app.py
-│   ├── requirements.txt
 │   ├── model/
 │   │   └── aqi_model.pkl
-│   ├── data/
-│   ├── test.ipynb
-│   └── delhi_pm25_aqi (1).csv
+│   ├── app.py
+│   ├── delhi_pm25_aqi (1).csv
+│   ├── requirements.txt
+│   └── test.ipynb
 │
 ├── frontend/
 │   ├── public/
@@ -65,33 +66,31 @@ delhi-air-quest/
 
 HOW TO RUN LOCALLY->
 
-Backend:
+```bash
+1. Clone the repository
+git clone https://github.com/anushkamittal04/delhi-air-quest.git
+cd delhi-air-quest
+
+2. Backend Setup
 cd backend
 pip install -r requirements.txt
-uvicorn app:app --reload
+python -m uvicorn app:app --reload --port 8000
 
-Backend runs at:
-http://127.0.0.1:8000
+# Backend runs at:
+http://localhost:8000
 
-Frontend:
+3. Frontend Setup (open new terminal)
 cd frontend
 npm install
 npm run dev
 
-Frontend runs at:
-http://localhost:5173
+# Frontend runs at:
+http://localhost:8080
 
-NGROK USAGE->
-
-Install:
-npm install -g ngrok
-
-Backend tunnel:
-ngrok http 8000
-
-Frontend tunnel:
-ngrok http 5173
-
+4. Open app
+Open browser:
+http://localhost:8080
+```
 FEATURES->
 - AQI prediction
 - ML-based forecasting
@@ -111,12 +110,11 @@ FUTURE IMPROVEMENTS->
 - Add live pollution APIs
 - Add authentication
 
-AUTHOR->
-About
+Team and Contributors->
 
 This project was originally created for a hackathon. It is now being maintained and shared here as part of my portfolio. I served as the primary developer throughout the project.
 
-Team Members
+Team Members:
 
 - Anushka Mittal
 - Yashree Srivastava
