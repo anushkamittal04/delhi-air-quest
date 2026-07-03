@@ -6,7 +6,7 @@ import numpy as np
 
 app = FastAPI()
 
-# ✅ Add CORS middleware so frontend can access the API
+# Add CORS middleware so frontend can access the API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # in production, replace "*" with your frontend URL
@@ -15,10 +15,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load trained model
+
 model = joblib.load("model/aqi_model.pkl")
 
-# STEP 1️⃣ AQI category logic
+
 def aqi_category(pm25):
     if pm25 <= 50:
         return "Good", "Best time to travel"
@@ -31,7 +31,7 @@ def aqi_category(pm25):
     else:
         return "Severe", "Travel not recommended"
 
-# STEP 2️⃣ API endpoint
+
 @app.get("/predict_aqi")
 def predict_aqi(
     destination: str = Query(..., example="Delhi"),

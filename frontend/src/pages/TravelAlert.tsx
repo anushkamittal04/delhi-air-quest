@@ -36,8 +36,7 @@ const TravelAlert = () => {
     try {
       const params = new URLSearchParams({ destination, time: dateTimeStr });
       const res = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/predict-aqi?${params.toString()}`,
-        { headers: { "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+        `http://localhost:8000/predict_aqi?${params.toString()}`
       );
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const json = await res.json();
